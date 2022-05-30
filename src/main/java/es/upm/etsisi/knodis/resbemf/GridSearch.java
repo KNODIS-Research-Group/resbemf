@@ -11,23 +11,32 @@ import es.upm.etsisi.knodis.resbemf.qualityMeasures.CummulativeCoverage;
 import es.upm.etsisi.knodis.resbemf.qualityMeasures.CummulativeMAE;
 import es.upm.etsisi.knodis.resbemf.recommender.*;
 
-public class Optimize {
+public class GridSearch {
 
-    private static String DATASET = "ml100k";
+    private static String DATASET = "anime";
 
-    private static double RANDOM_SEARCH_COVERAGE = 1.0;
+    private static double RANDOM_SEARCH_COVERAGE = 0.75;
 
     private static long SEED = 4815162342L;
 
     public static void main (String[] args) throws Exception {
 
         DataModel datamodel = null;
+        double[] scores = null;
 
         if (DATASET.equals("ml100k")) {
-            //dataset = new RandomSplitDataSet("datasets/ml100k.txt", "\t");
             datamodel = BenchmarkDataModels.MovieLens100K();
+            scores = new double[]{1.0, 2.0, 3.0, 4.0, 5.0};
+        } else if (DATASET.equals("ml1m")) {
+            datamodel = BenchmarkDataModels.MovieLens1M();
+            scores = new double[]{1.0, 2.0, 3.0, 4.0, 5.0};
+        } else if (DATASET.equals("ft")) {
+            datamodel = BenchmarkDataModels.FilmTrust();
+            scores = new double[]{0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0};
+        } else if (DATASET.equals("anime")) {
+            datamodel = BenchmarkDataModels.MyAnimeList();
+            scores = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         }
-
 
         ParamsGrid paramsGrid = null;
         RandomSearchCV search  = null;
@@ -38,9 +47,14 @@ public class Optimize {
 
         paramsGrid.addParam("numIters", new int[]{25, 50, 75, 100});
         paramsGrid.addParam("numFactors", new int[]{2, 4, 6, 8, 10});
-        paramsGrid.addParam("learningRate", new double[]{0.001, 0.002, 0.003, 0.004, 0.005});
-        paramsGrid.addParam("regularization", new double[]{0.01, 0.05, 0.10, 0.15, 0.20});
-        paramsGrid.addFixedParam("scores", new double[]{1, 2, 3, 4, 5});
+        if (DATASET.equals("anime")) {
+            paramsGrid.addParam("regularization", new double[]{0.0001, 0.001, 0.01, 0.1});
+            paramsGrid.addParam("learningRate", new double[]{0.0001, 0.0002, 0.0003, 0.0004, 0.0005});
+        } else {
+            paramsGrid.addParam("regularization", new double[]{0.01, 0.05, 0.10, 0.15, 0.20});
+            paramsGrid.addParam("learningRate", new double[]{0.001, 0.002, 0.003, 0.004, 0.005});
+        }
+        paramsGrid.addFixedParam("scores", scores);
         paramsGrid.addFixedParam("seed", SEED);
 
         search = new RandomSearchCV(datamodel, paramsGrid, ResBeMF.class, new Class[]{CummulativeMAE.class, CummulativeCoverage.class}, 5, RANDOM_SEARCH_COVERAGE, SEED);
@@ -54,9 +68,13 @@ public class Optimize {
 
         paramsGrid.addParam("numIters", new int[]{25, 50, 75, 100});
         paramsGrid.addParam("numFactors", new int[]{2, 4, 6, 8, 10});
-        paramsGrid.addParam("learningRate", new double[]{0.01, 0.02, 0.03, 0.04, 0.05});
+        if (DATASET.equals("anime")) {
+            paramsGrid.addParam("learningRate", new double[]{0.001, 0.002, 0.003, 0.004, 0.005});
+        } else {
+            paramsGrid.addParam("learningRate", new double[]{0.01, 0.02, 0.03, 0.04, 0.05});
+        }
         paramsGrid.addParam("regularization", new double[]{0.0001, 0.001, 0.01, 0.1, 1.0});
-        paramsGrid.addFixedParam("ratings", new double[]{1, 2, 3, 4, 5});
+        paramsGrid.addFixedParam("ratings", scores);
         paramsGrid.addFixedParam("seed", SEED);
 
         search = new RandomSearchCV(datamodel, paramsGrid, BeMF.class, new Class[]{CummulativeMAE.class, CummulativeCoverage.class}, 5, RANDOM_SEARCH_COVERAGE, SEED);
@@ -72,7 +90,7 @@ public class Optimize {
         paramsGrid.addParam("numFactors", new int[]{2, 4, 6, 8, 10});
         paramsGrid.addParam("learningRate", new double[]{0.1, 0.2, 0.3, 0.4, 0.5});
         paramsGrid.addParam("regularization", new double[]{0.0001, 0.00025, 0.0005, 0.00075, 0.001});
-        paramsGrid.addFixedParam("ratings", new double[]{1, 2, 3, 4, 5});
+        paramsGrid.addFixedParam("ratings", scores);
         paramsGrid.addFixedParam("seed", SEED);
 
         search = new RandomSearchCV(datamodel, paramsGrid, DirMF.class, new Class[]{CummulativeMAE.class, CummulativeCoverage.class}, 5, RANDOM_SEARCH_COVERAGE, SEED);

@@ -270,15 +270,18 @@ public class DirMF extends ProbabilistcRecommender {
                     sum += Maths.logistic(dot);
                 }
 
+                double digammaSum = Gamma.digamma(sum);
+
                 for (int s = 0; s < ratings.length; s++) {
                     double rating = user.getRatingAt(pos);
                     double r_ui = (rating == ratings[s] ? Math.exp(rating) : 1) / (ratings.length - 1 + Math.exp(rating));
 
                     double dot = Maths.dotProduct(P[s][userIndex], Q[s][itemIndex]);
                     double logit = Maths.logistic(dot);
+                    double digammaLogit = Gamma.digamma(logit);
 
                     for (int k = 0; k < numFactors; k++) {
-                        double gradient = Q[s][itemIndex][k] * logit * (1 - logit) * (Gamma.digamma(logit) - Gamma.digamma(sum) - Math.log(r_ui));
+                        double gradient = Q[s][itemIndex][k] * logit * (1 - logit) * (digammaLogit - digammaSum - Math.log(r_ui));
                         P[s][userIndex][k] -= learningRate * (gradient + regularization * P[s][userIndex][k]);
                     }
                 }
@@ -310,15 +313,18 @@ public class DirMF extends ProbabilistcRecommender {
                     sum += Maths.logistic(dot);
                 }
 
+                double digammaSum = Gamma.digamma(sum);
+
                 for (int s = 0; s < ratings.length; s++) {
                     double rating = item.getRatingAt(pos);
                     double r_ui = (rating == ratings[s] ? Math.exp(rating) : 1) / (ratings.length - 1 + Math.exp(rating));
 
                     double dot = Maths.dotProduct(P[s][userIndex], Q[s][itemIndex]);
                     double logit = Maths.logistic(dot);
+                    double digammaLogit = Gamma.digamma(logit);
 
                     for (int k = 0; k < numFactors; k++) {
-                        double gradient = P[s][userIndex][k] * logit * (1 - logit) * (Gamma.digamma(logit) - Gamma.digamma(sum) - Math.log(r_ui));
+                        double gradient = P[s][userIndex][k] * logit * (1 - logit) * (digammaLogit - digammaSum - Math.log(r_ui));
                         Q[s][itemIndex][k] -= learningRate * (gradient + regularization * Q[s][itemIndex][k]);
                     }
                 }
