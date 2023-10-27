@@ -215,6 +215,16 @@ public class DirMF extends ProbabilistcRecommender {
         return dot / sum;
     }
 
+    @Override
+    public double mean(int userIndex, int itemIndex) {
+        double mean = 0;
+        for (int r = 0; r < this.ratings.length; r++) {
+            double prob = this.getProbability(userIndex, itemIndex, r);
+            mean += this.ratings[r] * prob;
+        }
+        return mean;
+    }
+
     /**
      * Computes a prediction probability
      *

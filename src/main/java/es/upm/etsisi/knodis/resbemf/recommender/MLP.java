@@ -300,6 +300,11 @@ public class MLP extends ProbabilistcRecommender {
         }
     }
 
+    @Override
+    public double mean(int userIndex, int itemIndex) {
+        return this.predict(userIndex, itemIndex);
+    }
+
     /**
      * Returns the number of epochs.
      *

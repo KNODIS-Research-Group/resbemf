@@ -10,4 +10,6 @@ public abstract class ProbabilistcRecommender extends Recommender {
     }
 
     public abstract double predictProba(int userIndex, int itemIndex);
+
+    public abstract double mean(int userIndex, int itemIndex);
 }

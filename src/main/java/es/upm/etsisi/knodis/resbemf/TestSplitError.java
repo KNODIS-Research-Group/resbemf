@@ -5,10 +5,7 @@ import com.opencsv.CSVReaderBuilder;
 import es.upm.etsisi.cf4j.data.BenchmarkDataModels;
 import es.upm.etsisi.cf4j.data.DataModel;
 import es.upm.etsisi.cf4j.util.plot.LinePlot;
-import es.upm.etsisi.knodis.resbemf.qualityMeasures.ClassificationAccuracy;
-import es.upm.etsisi.knodis.resbemf.qualityMeasures.Coverage;
-import es.upm.etsisi.knodis.resbemf.qualityMeasures.MAE;
-import es.upm.etsisi.knodis.resbemf.qualityMeasures.NDCG;
+import es.upm.etsisi.knodis.resbemf.qualityMeasures.*;
 import es.upm.etsisi.knodis.resbemf.recommender.*;
 
 import java.io.FileReader;
@@ -29,19 +26,24 @@ public class TestSplitError {
 
         DataModel datamodel = null;
         double[] scores = null;
+        double relevantScore = 0;
 
         if (DATASET.equals("ml100k")) {
             datamodel = BenchmarkDataModels.MovieLens100K();
             scores = new double[]{1.0, 2.0, 3.0, 4.0, 5.0};
+            relevantScore = 4.0;
         } else if (DATASET.equals("ml1m")) {
             datamodel = BenchmarkDataModels.MovieLens1M();
             scores = new double[]{1.0, 2.0, 3.0, 4.0, 5.0};
+            relevantScore = 4.0;
         } else if (DATASET.equals("ft")) {
             datamodel = BenchmarkDataModels.FilmTrust();
             scores = new double[]{0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0};
+            relevantScore = 3.0;
         } else if (DATASET.equals("anime")) {
             datamodel = BenchmarkDataModels.MyAnimeList();
             scores = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            relevantScore = 7.0;
         }
 
         double maxDiff = scores[scores.length-1] - scores[0];
@@ -49,8 +51,7 @@ public class TestSplitError {
         LinePlot maePlot = new LinePlot(RELIABILITIES, "reliability", "1-mae");
         LinePlot coveragePlot = new LinePlot(RELIABILITIES, "reliability", "1-coverage");
         LinePlot accuracyPlot = new LinePlot(RELIABILITIES, "reliability", "accuracy");
-        LinePlot ndcgPlot = new LinePlot(RELIABILITIES, "reliability", "ndcg");
-
+        LinePlot mapPlot = new LinePlot(RELIABILITIES, "reliability", "map");
 
         // ResBeMF
 
@@ -74,7 +75,7 @@ public class TestSplitError {
             maePlot.addSeries(seriesName);
             coveragePlot.addSeries(seriesName);
             accuracyPlot.addSeries(seriesName);
-            ndcgPlot.addSeries(seriesName);
+            mapPlot.addSeries(seriesName);
 
             for (double rel : RELIABILITIES) {
                 double mae = new MAE(resbemf, rel).getScore();
@@ -86,8 +87,8 @@ public class TestSplitError {
                 double accuracy = new ClassificationAccuracy(resbemf, rel).getScore();
                 accuracyPlot.setValue(seriesName, rel, accuracy);
 
-                double ndcg = new NDCG(resbemf, NUMBER_OF_RECOMMENDATIONS, rel).getScore();
-                ndcgPlot.setValue(seriesName, rel, ndcg);
+                double map = new MAP(resbemf, NUMBER_OF_RECOMMENDATIONS, relevantScore, rel).getScore();
+                mapPlot.setValue(seriesName, rel, map);
             }
         }
 
@@ -114,7 +115,7 @@ public class TestSplitError {
             maePlot.addSeries(seriesName);
             coveragePlot.addSeries(seriesName);
             accuracyPlot.addSeries(seriesName);
-            ndcgPlot.addSeries(seriesName);
+            mapPlot.addSeries(seriesName);
 
             for (double rel : RELIABILITIES) {
                 double mae = new MAE(bemf, rel).getScore();
@@ -126,8 +127,8 @@ public class TestSplitError {
                 double accuracy = new ClassificationAccuracy(bemf, rel).getScore();
                 accuracyPlot.setValue(seriesName, rel, accuracy);
 
-                double ndcg = new NDCG(bemf, NUMBER_OF_RECOMMENDATIONS, rel).getScore();
-                ndcgPlot.setValue(seriesName, rel, ndcg);
+                double map = new MAP(bemf, NUMBER_OF_RECOMMENDATIONS, relevantScore, rel).getScore();
+                mapPlot.setValue(seriesName, rel, map);
             }
         }
 
@@ -154,7 +155,7 @@ public class TestSplitError {
             maePlot.addSeries(seriesName);
             coveragePlot.addSeries(seriesName);
             accuracyPlot.addSeries(seriesName);
-            ndcgPlot.addSeries(seriesName);
+            mapPlot.addSeries(seriesName);
 
             for (double rel : RELIABILITIES) {
                 double mae = new MAE(dirmf, rel).getScore();
@@ -166,8 +167,8 @@ public class TestSplitError {
                 double accuracy = new ClassificationAccuracy(dirmf, rel).getScore();
                 accuracyPlot.setValue(seriesName, rel, accuracy);
 
-                double ndcg = new NDCG(dirmf, NUMBER_OF_RECOMMENDATIONS, rel).getScore();
-                ndcgPlot.setValue(seriesName, rel, ndcg);
+                double map = new MAP(dirmf, NUMBER_OF_RECOMMENDATIONS, relevantScore, rel).getScore();
+                mapPlot.setValue(seriesName, rel, map);
             }
         }
 
@@ -192,7 +193,7 @@ public class TestSplitError {
 
         maePlot.addSeries(seriesName);
         coveragePlot.addSeries(seriesName);
-        ndcgPlot.addSeries(seriesName);
+        mapPlot.addSeries(seriesName);
 
         for (double rel : RELIABILITIES) {
             double mae = new MAE(pmf, rel).getScore();
@@ -201,8 +202,8 @@ public class TestSplitError {
             double coverage = new Coverage(pmf, rel).getScore();
             coveragePlot.setValue(seriesName, rel, coverage);
 
-            double ndcg = new NDCG(pmf, NUMBER_OF_RECOMMENDATIONS, rel).getScore();
-            ndcgPlot.setValue(seriesName, rel, ndcg);
+            double map = new MAP(pmf, NUMBER_OF_RECOMMENDATIONS, relevantScore, rel).getScore();
+            mapPlot.setValue(seriesName, rel, map);
         }
 
 
@@ -225,7 +226,7 @@ public class TestSplitError {
 
         maePlot.addSeries(seriesName);
         coveragePlot.addSeries(seriesName);
-        ndcgPlot.addSeries(seriesName);
+        mapPlot.addSeries(seriesName);
 
         for (double rel : RELIABILITIES) {
             double mae = new MAE(mlp, rel).getScore();
@@ -234,8 +235,8 @@ public class TestSplitError {
             double coverage = new Coverage(mlp, rel).getScore();
             coveragePlot.setValue(seriesName, rel, coverage);
 
-            double ndcg = new NDCG(pmf, NUMBER_OF_RECOMMENDATIONS, rel).getScore();
-            ndcgPlot.setValue(seriesName, rel, ndcg);
+            double map = new MAP(mlp, NUMBER_OF_RECOMMENDATIONS, relevantScore, rel).getScore();
+            mapPlot.setValue(seriesName, rel, map);
         }
 
 
@@ -244,7 +245,7 @@ public class TestSplitError {
         maePlot.exportData("results/test-split/" + DATASET + "/mae.csv");
         coveragePlot.exportData("results/test-split/" + DATASET + "/coverage.csv");
         accuracyPlot.exportData("results/test-split/" + DATASET + "/accuracy.csv");
-        ndcgPlot.exportData("results/test-split/" + DATASET + "/ndcg.csv");
+        mapPlot.exportData("results/test-split/" + DATASET + "/map.csv");
     }
 
     private static List<String[]> getParetoFront (String method) throws Exception {

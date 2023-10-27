@@ -180,6 +180,16 @@ public class ResBeMF extends ProbabilistcRecommender {
         return this.scores[index];
     }
 
+    @Override
+    public double mean(int userIndex, int itemIndex) {
+        double mean = 0;
+        for (int s = 0; s < this.scores.length; s++) {
+            double prob = this.softmax(userIndex, itemIndex, s);
+            mean += this.scores[s] * prob;
+        }
+        return mean;
+    }
+
 
     private double softmax(int userIndex, int itemIndex, int s) {
         double exp = Math.exp(Maths.dotProduct(this.P[userIndex][s], this.Q[itemIndex][s]));

@@ -227,6 +227,11 @@ public class PMF extends ProbabilistcRecommender {
     }
 
     @Override
+    public double mean(int userIndex, int itemIndex) {
+        return this.predict(userIndex, itemIndex);
+    }
+
+    @Override
     public String toString() {
         StringBuilder str = new StringBuilder("PMF(")
                 .append("numFactors=").append(this.numFactors)
