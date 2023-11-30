@@ -1,16 +1,22 @@
 # Restricted Bernoulli Matrix Factorization: Widening the trade-off between prediction accuracy and coverage in Classification based Collaborative Filtering
 
-This repository includes the source code for the experiments discussed in the manuscript titled *Restricted Bernoulli Matrix Factorization: Widening the Trade-off between Prediction Accuracy and Coverage in Classification-based Collaborative Filtering*. The manuscript has been submitted to the *Knowledge-Based Systems* journal. You can access the preprint on ![arXiv](https://arxiv.org/abs/2210.10619).
+This repository includes the source code for the experiments discussed in the manuscript titled *Restricted Bernoulli Matrix Factorization: Widening the Trade-off between Prediction Accuracy and Coverage in Classification-based Collaborative Filtering*. The manuscript has been submitted to the *Knowledge-Based Systems* journal. You can access the preprint on [arXiv](https://arxiv.org/abs/2210.10619).
 
 ## Random search results
 
-MovieLens100K:
+MovieLens 100K:
 
 ![Hyper-parameters](figs/ml100k-hyperparameters.png)
 
+MovieLens 1M:
+
 ![Hyper-parameters](figs/ml1m-hyperparameters.png)
 
+FilmTrust:
+
 ![Hyper-parameters](figs/ft-hyperparameters.png)
+
+MyAnimeList:
 
 ![Hyper-parameters](figs/anime-hyperparameters.png)
 
