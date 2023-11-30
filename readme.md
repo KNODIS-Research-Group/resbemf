@@ -1,57 +1,29 @@
-# ResBeMF
+# Restricted Bernoulli Matrix Factorization: Widening the trade-off between prediction accuracy and coverage in Classification based Collaborative Filtering
 
-## MovieLens100K
+This repository includes the source code for the experiments discussed in the manuscript titled *Restricted Bernoulli Matrix Factorization: Widening the Trade-off between Prediction Accuracy and Coverage in Classification-based Collaborative Filtering*. The manuscript has been submitted to the *Knowledge-Based Systems* journal. You can access the preprint on ![arXiv](https://arxiv.org/abs/2210.10619).
 
-Random search results:
+## Random search results
+
+MovieLens100K:
 
 ![Hyper-parameters](figs/ml100k-hyperparameters.png)
 
-Pareto front:
-
-![Pareto front](figs/ml100k-pareto-front.png)
-
-Test error:
-
-![Pareto front](figs/ml100k-test-error.png)
-
-## MovieLens1M
-
-Random search results:
-
 ![Hyper-parameters](figs/ml1m-hyperparameters.png)
-
-Pareto front:
-
-![Pareto front](figs/ml1m-pareto-front.png)
-
-Test error:
-
-![Pareto front](figs/ml1m-test-error.png)
-
-## FilmTrust
-
-Random search results:
 
 ![Hyper-parameters](figs/ft-hyperparameters.png)
 
-Pareto front:
-
-![Pareto front](figs/ft-pareto-front.png)
-
-Test error:
-
-![Pareto front](figs/ft-test-error.png)
-
-## MyAnimeList
-
-Random search results:
-
 ![Hyper-parameters](figs/anime-hyperparameters.png)
 
-Pareto front:
+## Pareto front:
 
-![Pareto front](figs/anime-pareto-front.png)
+![Pareto front](figs/pareto-front.png)
 
-Test error:
+## Test error:
 
-![Pareto front](figs/anime-test-error.png)
+Matrix factorization based collaborative filtering:
+
+![Test error](figs/mf-test-error.png)
+
+Artificial neural network based collaborative filtering:
+
+![Test error](figs/nn-test-error.png)

@@ -220,6 +220,14 @@ public class ResBeMF extends ProbabilistcRecommender {
         return this.softmax(userIndex, itemIndex, s);
     }
 
+    public double[] getProbs(int userIndex, int itemIndex) {
+        double[] probs = new double[scores.length];
+        for (int s = 0; s < probs.length; s++) {
+            probs[s] = softmax(userIndex, itemIndex, s);
+        }
+        return probs;
+    }
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("ResBeMF(")
