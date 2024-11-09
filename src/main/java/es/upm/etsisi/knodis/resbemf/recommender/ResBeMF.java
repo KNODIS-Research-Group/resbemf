@@ -3,6 +3,7 @@ package es.upm.etsisi.knodis.resbemf.recommender;
 import es.upm.etsisi.cf4j.data.DataModel;
 import es.upm.etsisi.cf4j.data.Item;
 import es.upm.etsisi.cf4j.data.User;
+import es.upm.etsisi.cf4j.qualityMeasure.prediction.MAE;
 import es.upm.etsisi.cf4j.util.Maths;
 import es.upm.etsisi.cf4j.util.process.Parallelizer;
 import es.upm.etsisi.cf4j.util.process.Partible;
@@ -272,19 +273,19 @@ public class ResBeMF extends ProbabilistcRecommender {
                 for (int s = 0; s < scores.length; s++) {
                     for (int f = 0; f < numFactors; f++) {
                         if (s == s0) {
-                            gradient[s][f] += (1 - softmax[s0]) * Q[itemIndex][s][f];
+                            gradient[s][f] += learningRate * (1 - softmax[s0]) * Q[itemIndex][s][f];
                         } else {
-                            gradient[s][f] -= softmax[s0] * Q[itemIndex][s][f];
+                            gradient[s][f] -= learningRate * softmax[s0] * Q[itemIndex][s][f];
                         }
 
-                        gradient[s][f] -= regularization * P[userIndex][s][f];
+                        gradient[s][f] -= learningRate * regularization * P[userIndex][s][f];
                     }
                 }
             }
 
             for (int s = 0; s < scores.length; s++) {
                 for (int f = 0; f < numFactors; f++) {
-                    P[userIndex][s][f] += learningRate * gradient[s][f];
+                    P[userIndex][s][f] +=  gradient[s][f];
                 }
             }
         }
@@ -322,19 +323,19 @@ public class ResBeMF extends ProbabilistcRecommender {
                 for (int s = 0; s < scores.length; s++) {
                     for (int f = 0; f < numFactors; f++) {
                         if (s == s0) {
-                            gradient[s][f] += (1 - softmax[s0]) * P[userIndex][s][f];
+                            gradient[s][f] += learningRate * (1 - softmax[s0]) * P[userIndex][s][f];
                         } else {
-                            gradient[s][f] -= softmax[s0] * P[userIndex][s][f];
+                            gradient[s][f] -= learningRate * softmax[s0] * P[userIndex][s][f];
                         }
 
-                        gradient[s][f] -= regularization * Q[itemIndex][s][f];
+                        gradient[s][f] -= learningRate * regularization * Q[itemIndex][s][f];
                     }
                 }
             }
 
             for (int s = 0; s < scores.length; s++) {
                 for (int f = 0; f < numFactors; f++) {
-                    Q[itemIndex][s][f] += learningRate * gradient[s][f];
+                    Q[itemIndex][s][f] += gradient[s][f];
                 }
             }
         }

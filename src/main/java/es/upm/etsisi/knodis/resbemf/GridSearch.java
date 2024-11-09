@@ -2,9 +2,6 @@ package es.upm.etsisi.knodis.resbemf;
 
 import es.upm.etsisi.cf4j.data.BenchmarkDataModels;
 import es.upm.etsisi.cf4j.data.DataModel;
-import es.upm.etsisi.cf4j.data.DataSet;
-import es.upm.etsisi.cf4j.data.RandomSplitDataSet;
-import es.upm.etsisi.cf4j.util.optimization.GridSearchCV;
 import es.upm.etsisi.cf4j.util.optimization.ParamsGrid;
 import es.upm.etsisi.cf4j.util.optimization.RandomSearchCV;
 import es.upm.etsisi.knodis.resbemf.qualityMeasures.CummulativeCoverage;
@@ -13,9 +10,9 @@ import es.upm.etsisi.knodis.resbemf.recommender.*;
 
 public class GridSearch {
 
-    private static String DATASET = "anime";
+    private static String DATASET = "ml10m";
 
-    private static double RANDOM_SEARCH_COVERAGE = 0.75;
+    private static double RANDOM_SEARCH_COVERAGE = 0.5;
 
     private static long SEED = 4815162342L;
 
@@ -30,6 +27,9 @@ public class GridSearch {
         } else if (DATASET.equals("ml1m")) {
             datamodel = BenchmarkDataModels.MovieLens1M();
             scores = new double[]{1.0, 2.0, 3.0, 4.0, 5.0};
+        } else if (DATASET.equals("ml10m")) {
+            datamodel = BenchmarkDataModels.MovieLens10M();
+            scores = new double[]{0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};
         } else if (DATASET.equals("ft")) {
             datamodel = BenchmarkDataModels.FilmTrust();
             scores = new double[]{0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0};
@@ -46,12 +46,19 @@ public class GridSearch {
         paramsGrid = new ParamsGrid();
 
         paramsGrid.addParam("numIters", new int[]{25, 50, 75, 100});
-        paramsGrid.addParam("numFactors", new int[]{2, 4, 6, 8, 10});
+        if (DATASET.equals("ml10m")) {
+            paramsGrid.addParam("numFactors", new int[]{10, 20, 30, 40});
+        } else {
+            paramsGrid.addParam("numFactors", new int[]{2, 4, 6, 8, 10});
+        }
         if (DATASET.equals("anime")) {
             paramsGrid.addParam("regularization", new double[]{0.0001, 0.001, 0.01, 0.1});
-            paramsGrid.addParam("learningRate", new double[]{0.0001, 0.0002, 0.0003, 0.0004, 0.0005});
         } else {
             paramsGrid.addParam("regularization", new double[]{0.01, 0.05, 0.10, 0.15, 0.20});
+        }
+        if (DATASET.equals("anime") || DATASET.equals("ml10m")) {
+            paramsGrid.addParam("learningRate", new double[]{0.0001, 0.0002, 0.0003, 0.0004, 0.0005});
+        } else {
             paramsGrid.addParam("learningRate", new double[]{0.001, 0.002, 0.003, 0.004, 0.005});
         }
         paramsGrid.addFixedParam("scores", scores);
@@ -68,7 +75,7 @@ public class GridSearch {
 
         paramsGrid.addParam("numIters", new int[]{25, 50, 75, 100});
         paramsGrid.addParam("numFactors", new int[]{2, 4, 6, 8, 10});
-        if (DATASET.equals("anime")) {
+        if (DATASET.equals("anime") || DATASET.equals("ml10")) {
             paramsGrid.addParam("learningRate", new double[]{0.001, 0.002, 0.003, 0.004, 0.005});
         } else {
             paramsGrid.addParam("learningRate", new double[]{0.01, 0.02, 0.03, 0.04, 0.05});
@@ -125,5 +132,20 @@ public class GridSearch {
         search = new RandomSearchCV(datamodel, paramsGrid, MLP.class, new Class[]{CummulativeMAE.class, CummulativeCoverage.class}, 5, RANDOM_SEARCH_COVERAGE, SEED);
         search.fit();
         search.exportResults("results/gridsearch/" + DATASET + "/mlp.csv");
+
+
+        // BiasedMF
+
+        paramsGrid = new ParamsGrid();
+
+        paramsGrid.addParam("numIters", new int[]{25, 50, 75, 100});
+        paramsGrid.addParam("numFactors", new int[]{2, 4, 6, 8, 10});
+        paramsGrid.addParam("gamma", new double[]{0.01, 0.02, 0.03, 0.04, 0.05});
+        paramsGrid.addParam("lambda", new double[]{0.0001, 0.001, 0.01, 0.1});
+        paramsGrid.addFixedParam("seed", SEED);
+
+        search = new RandomSearchCV(datamodel, paramsGrid, BiasedMF.class, new Class[]{CummulativeMAE.class, CummulativeCoverage.class}, 5, RANDOM_SEARCH_COVERAGE, SEED);
+        search.fit();
+        search.exportResults("results/gridsearch/" + DATASET + "/biasedmf.csv");
     }
 }

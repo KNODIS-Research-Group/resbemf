@@ -1,6 +1,6 @@
-# Restricted Bernoulli Matrix Factorization: Widening the trade-off between prediction accuracy and coverage in Classification based Collaborative Filtering
+# Restricted Bernoulli Matrix Factorization: Balancing the trade-off between prediction accuracy and coverage in Classification based collaborative filtering
 
-This repository includes the source code for the experiments discussed in the manuscript titled *Restricted Bernoulli Matrix Factorization: Widening the Trade-off between Prediction Accuracy and Coverage in Classification-based Collaborative Filtering*. The manuscript has been submitted to the *Knowledge-Based Systems* journal. You can access the preprint on [arXiv](https://arxiv.org/abs/2210.10619).
+This repository includes the source code for the experiments discussed in the manuscript titled *Restricted Bernoulli Matrix Factorization: Balancing the trade-off between prediction accuracy and coverage in Classification based collaborative filtering*. The manuscript has been submitted to the *Applied Soft Computing* journal. You can access the preprint on [arXiv](https://arxiv.org/abs/2210.10619).
 
 ## Random search results
 
@@ -20,6 +20,10 @@ MyAnimeList:
 
 ![Hyper-parameters](figs/anime-hyperparameters.png)
 
+MyAnimeList:
+
+![Hyper-parameters](figs/ml10m-hyperparameters.png)
+
 ## Pareto front:
 
 ![Pareto front](figs/pareto-front.png)
@@ -33,3 +37,6 @@ Matrix factorization based collaborative filtering:
 Artificial neural network based collaborative filtering:
 
 ![Test error](figs/nn-test-error.png)
+
+> To reproduce the experiments from this research, unzip the prediction files into the preds/gmcm and preds/mwgp directories.
+
