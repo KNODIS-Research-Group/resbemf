@@ -1,6 +1,6 @@
 # Restricted Bernoulli Matrix Factorization: Balancing the trade-off between prediction accuracy and coverage in Classification based collaborative filtering
 
-This repository includes the source code for the experiments discussed in the manuscript titled *Restricted Bernoulli Matrix Factorization: Balancing the trade-off between prediction accuracy and coverage in Classification based collaborative filtering*. The manuscript has been submitted to the *Applied Soft Computing* journal. You can access the preprint on [arXiv](https://arxiv.org/abs/2210.10619).
+This repository includes the source code for the experiments discussed in the manuscript titled *Restricted Bernoulli Matrix Factorization: Balancing the trade-off between prediction accuracy and coverage in Classification based collaborative filtering*. The manuscript has been submitted to the *International Journal of Interactive Multimedia and Artificial Intelligence* journal. You can access the preprint on [arXiv](https://arxiv.org/abs/2210.10619).
 
 ## Random search results
 
