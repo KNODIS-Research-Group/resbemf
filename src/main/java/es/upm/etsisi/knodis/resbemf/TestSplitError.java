@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class TestSplitError {
 
-    private static final String DATASET = "ml1m";
+    private static final String DATASET = "ml10m";
 
     private static double[] RELIABILITIES = {0.00, 0.05, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95};
 
@@ -348,6 +348,32 @@ public class TestSplitError {
             coveragePlot.setValue(seriesName, rel, coverage);
 
             double map = new MAP(mwgp, NUMBER_OF_RECOMMENDATIONS, relevantScore, rel).getScore();
+            mapPlot.setValue(seriesName, rel, map);
+        }
+
+        // NGCF
+
+        NGCF ngcf = new NGCF(datamodel, "preds/ngcf/ngcf_" + DATASET + "_predictions.csv", scores);
+        ngcf.fit();
+
+        seriesName = "NGCF";
+
+        maePlot.addSeries(seriesName);
+        coveragePlot.addSeries(seriesName);
+        accuracyPlot.addSeries(seriesName);
+        mapPlot.addSeries(seriesName);
+
+        for (double rel : RELIABILITIES) {
+            double mae = new MAE(ngcf, rel).getScore();
+            maePlot.setValue(seriesName, rel, 1-mae/maxDiff);
+
+            double coverage = new Coverage(ngcf, rel).getScore();
+            coveragePlot.setValue(seriesName, rel, coverage);
+
+            double accuracy = new ClassificationAccuracy(ngcf, rel).getScore();
+            accuracyPlot.setValue(seriesName, rel, accuracy);
+
+            double map = new MAP(ngcf, NUMBER_OF_RECOMMENDATIONS, relevantScore, rel).getScore();
             mapPlot.setValue(seriesName, rel, map);
         }
 

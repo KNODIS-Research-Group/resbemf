@@ -38,5 +38,5 @@ Artificial neural network based collaborative filtering:
 
 ![Test error](figs/nn-test-error.png)
 
-> To reproduce the experiments from this research, unzip the prediction files into the preds/gmcm and preds/mwgp directories.
+> To reproduce the experiments from this research, unzip the prediction files into the preds/gmcm, preds/mwgp and preds/ngcf directories.
 
